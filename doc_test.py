@@ -53,7 +53,11 @@ class TestDeDecompound(unittest.TestCase):
         # Start server
         pid = subprocess.Popen([sys.executable,    # this Python
                                 '-m',
+<<<<<<< HEAD
                                 'doc_server',
+=======
+                                'kirke.de_decompound.doc_server',
+>>>>>>> e441dfa0af04f2ab4d259324a9e2f8d3eb88da4f
                                 '-p',
                                 'de_dicts/de-mixed.dic',
                                 str(self.PORT)])
@@ -81,7 +85,11 @@ class TestDeDecompound(unittest.TestCase):
         # Start server
         pid = subprocess.Popen([sys.executable,    # this Python
                                 '-m',
+<<<<<<< HEAD
                                 'doc_server',
+=======
+                                'kirke.de_decompound.doc_server',
+>>>>>>> e441dfa0af04f2ab4d259324a9e2f8d3eb88da4f
                                 '-d',
                                 'de_dicts/de-mixed.dic',
                                 str(self.PORT)])
