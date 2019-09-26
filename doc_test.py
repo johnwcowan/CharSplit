@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import os
 import socket
 import subprocess
 import time
@@ -14,14 +13,14 @@ RESULT_WORD1 = 'Autobahn'
 RESULT_WORD2 = 'Raststätte'
 
 TEST_SENTENCE = \
-    """Die Technik setzt sich aus dem europaweiten Mobilfunk·standard Gsm, 
+    """Die Technik setzt sich aus dem europaweiten Mobilfunk·standard Gsm,
        der in Deutschland über das D1-Netz angeboten wird,
        und dem weltweit verfügbaren System
        von Navigationssatelliten (Gps) zusammen.
     """
 
 RESULT_SENTENCE = \
-    """Die Technik setzt sich aus dem europaweiten Mobil·funk·standard Gsm, 
+    """Die Technik setzt sich aus dem europaweiten Mobil·funk·standard Gsm,
        der in Deutschland über das D1-Netz angeboten wird,
        und dem weltweit verfügbaren System
        von Navigations·satelliten (Gps) zusammen.
@@ -62,7 +61,7 @@ class TestDeDecompound(unittest.TestCase):
 
     def test_doc_split(self):
 
-        self.assertEqual(doc_split(TEST_SENTENCE), RESULT_SENTENCE);
+        self.assertEqual(doc_split(TEST_SENTENCE), RESULT_SENTENCE)
 
     def test_doc_server_plaintext(self):
         # Start server
