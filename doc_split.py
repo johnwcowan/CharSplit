@@ -103,7 +103,7 @@ def maximal_split_str(word, de_dict=None):
     return result
 
 
-def doc_split(doc, de_dict=None):
+def doc_split(doc, de_dict=None, result_map=None):
     """Split a whole document (a string) using the specified dictionary.
        Return the whole document with splitting dots.
     """
@@ -112,6 +112,8 @@ def doc_split(doc, de_dict=None):
     # This is an entry point, so load the dictionary just in case.
     load_known_words(de_dict)
     result = []
+    if result_map is not None:
+        result_map.clear()
     windexes = [(mobj.start(), mobj.end()) for mobj in DE_WORD_PAT.finditer(doc)]
     # Non-word before the first word (OK if empty)
     result.append(doc[:windexes[0][0]])
@@ -119,7 +121,11 @@ def doc_split(doc, de_dict=None):
     for i in range(0, len(windexes)):
         # Add a split word and the following non-word (OK if empty)
         (start, end) = windexes[i]
-        result.append(maximal_split_str(doc[start:end]))
+        unsplit_word = doc[start:end]
+        split_word = maximal_split_str(unsplit_word)
+        result.append(split_word)
+        if result_map is not None and MIDDLE_DOT in split_word:
+            result_map[unsplit_word] = split_word
         if i == len(windexes) - 1:
             next_start = len(doc)
         else:

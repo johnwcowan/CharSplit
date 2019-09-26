@@ -9,12 +9,13 @@ import doc_config
 import doc_split
 
 result_map = {}
+dict_mode = False
 
 def tabular(map):
     result = []
     for (orig, split) in map.items():
         result.append(orig + '\t' + split)
-    return join.result('\n')
+    return '\n'.join(result) + '\n'
 
 def run(client_socket, client_address, de_dict):
     """Reads, splits, writes."""
@@ -44,18 +45,21 @@ def main():
     """Main server program.
        Reads the whole of standard input, splits it all,
        sends the result to standard output.
-       Usage:  doc_server dict port
+       Usage: doc_server [-p][-d] port dict
     """
     if len(sys.argv) > 3:
-        port = int(sys.argv[3])
-    else:
-        port = doc_config.DEFAULT_PORT
-    if len(sys.argv) > 2:
-        de_dict = sys.argv[2]
+        de_dict = sys.argv[3]
     else:
         de_dict = doc_config.DEFAULT_DICT
+
+    if len(sys.argv) > 2:
+        port = int(sys.argv[2])
+    else:
+        port = doc_config.DEFAULT_PORT
+
+    global dict_mode
     if len(sys.argv) > 1:
-        dict_mode = sys.argv[1] == '-d'
+        dict_mode = (sys.argv[1] == '-d')
 
     doc_split.load_known_words(de_dict)
 
