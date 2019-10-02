@@ -58,6 +58,8 @@ class TestDeDecompound(unittest.TestCase):
                          'Mobil·funk·standard')
         self.assertEqual(maximal_split_str('europaweiten'),
                          'europaweiten')
+        self.assertEqual(maximal_split_str('unbestimmte'),
+                         'unbestimmte')
 
     def test_doc_split(self):
 

@@ -57,17 +57,22 @@ def maximal_split(word, de_dict=doc_config.DEFAULT_DICT):
     """Recursively split a single word into a list of words.
        Only the first result is split further, as CharSplit divides
        compounds into non-final and final parts.
+       Try to avoid splitting words other than nouns,
+       as false positives are too likely.
     """
     # This is an entry point, so load the dictionary just in case.
     load_known_words(de_dict)
-    word_list = get_best_split(word)
-    if len(word_list) == 1:
-        # Binary splitter was unable to split
-        return word_list
-    if len(word_list[0]) < 4 or len(word_list[1]) < 4:
-        # If split product is too short, ignore the split
+    # Do not split a non-noun
+    if not word[0].isupper():
         return [word]
-        # Recursively split the non-head and prepend it to the head
+    word_list = get_best_split(word)
+    # Binary splitter was unable to split
+    if len(word_list) == 1:
+        return word_list
+    # If split product is too short, ignore the split
+    if len(word_list[0]) < 4 or len(word_list[1]) < 4:
+        return [word]
+    # Recursively split the non-head and prepend it to the head
     return maximal_split(word_list[0]) + [word_list[1]]
 
 def load_known_words(de_dict=doc_config.DEFAULT_DICT):

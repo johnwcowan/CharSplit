@@ -68,8 +68,8 @@ def main():
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     server.bind(('localhost', port))
-    #print("Server started", file=sys.stderr)
-    #print("Waiting for client request..", file=sys.stderr)
+    print("Server started", file=sys.stderr)
+    print("Waiting for client request..", file=sys.stderr)
     while True:
         server.listen(1)
         client, client_address = server.accept()
