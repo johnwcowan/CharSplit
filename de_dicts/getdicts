@@ -8,6 +8,7 @@
 QUIET='-q'
 
 set -e
+export LANG=C
 HERE=$(pwd)
 cd /tmp
 
@@ -54,12 +55,12 @@ egrep '^#|^$' de_AT_frami.dic8 >>headers
 
 echo sort and merge
 egrep -v '^#|^$' de_DE_OLDSPELL.dic8 | sed 's;/.*$;;' |
-  LANG=C sort >$HERE/de-1901.dic
+  sort >$HERE/de-1901.dic
 egrep -v '^#|^$' de_DE_frami.dic8 | sed 's;/.*$;;' |
-  LANG=C sort >$HERE/de-DE.dic
+  sort >$HERE/de-DE.dic
 egrep -v '^#|^$' de_CH_frami.dic8 | sed 's;/.*$;;' |
-  LANG=C sort >$HERE/de-CH.dic
+  sort >$HERE/de-CH.dic
 egrep -v '^#|^$' de_AT_frami.dic8 | sed 's;/.*$;;' |
-  LANG=C sort >$HERE/de-AT.dic
-sort -u -o de-mixed.nohead $HERE/de-1901.dic $HERE/de-[A-Z][A-Z].dic
+  sort >$HERE/de-AT.dic
+sort -u -o de-mixed.nohead $HERE/*.dic
 cat headers de-mixed.nohead >$HERE/de-mixed.dic

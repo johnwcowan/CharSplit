@@ -135,7 +135,7 @@ The default host and port are in the file `doc_config.py`.
 To download German dictionaries for `doc_split` and `doc_server`:
 ```
 $ cd de_dicts
-$ sh ../getdicts
+$ sh getdicts
 ```
 This will download the German spelling plugins from the LibreOffice site,
 extract the wordlists, and write five files into the current directory.
@@ -144,7 +144,14 @@ It leaves a good many files in `/tmp`, which are not needed further.
     fairly extensive (about 250,000 words each)
     and provide current German, Austrian, and Swiss spelling.
   * The file `de-1901.dic` provides the spelling used between 1901 and 1996.
-  * The file `de-mixed.dic` is a merger of all four of the other files.
+  * The file `misc.dic` is a collection of nouns that are mis-split and
+    are therefore included in the dictionary so that they won't be split.
+  * The file `legal.dic` contains legal terms.  Remove it before running
+    getdicts if you don't want it to be included.
+  * The file `de-mixed.dic` is a merger of all of the other files.
+
+You can add your own wordlists before running `getdicts` if you want.
+They must be plain UTF-8 text with one word per line.
 
 If the program is not splitting hard enough for your purposes,
 you may want to find and use a smaller dictionary.
