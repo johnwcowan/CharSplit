@@ -1,7 +1,8 @@
 __pycache__/
-de_dicts/de-1901.dic
-de_dicts/de-AT.dic
-de_dicts/de-CH.dic
-de_dicts/de-DE.dic
-de_dicts/de-mixed.dic
+dicts/de-1901.dic
+dicts/de-AT.dic
+dicts/de-CH.dic
+dicts/de-DE.dic
+dicts/de-mixed.dic
+dicts/nl-NL.dic
 samples/

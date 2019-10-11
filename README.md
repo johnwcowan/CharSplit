@@ -134,7 +134,7 @@ The default host and port are in the file `doc_config.py`.
 ## Downloading dictionaries
 To download German dictionaries for `doc_split` and `doc_server`:
 ```
-$ cd de_dicts
+$ cd dicts
 $ sh getdicts
 ```
 This will download the German spelling plugins from the LibreOffice site,
