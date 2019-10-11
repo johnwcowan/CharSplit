@@ -1,6 +1,8 @@
 """
 Estimate compound word boundaries based ngram probabilities of n characters at word endings
 Take as input a file with one word (a noun) per line
+Use different output files for different languages (on the command line)
+Specify language on the command line (de, nl, etc.)
 """
 
 __author__ = 'don.tuggener@gmail.com'
@@ -8,6 +10,10 @@ __author__ = 'don.tuggener@gmail.com'
 import re
 import sys
 from collections import defaultdict
+
+if len(sys.argv) != 2:
+    print("Must specify language argument (de, nl, etc.)")
+    sys.exit(1)
 
 # Dicts for counting the ngrams
 end_ngrams = defaultdict(int)
@@ -61,7 +67,7 @@ end_ngrams = {k: v/all_ngrams[k] for k,v in end_ngrams.items() if v > 1}
 in_ngrams = {k: v/all_ngrams[k] for k,v in in_ngrams.items() if v > 1}
 
 # Write dicts to python file
-with open('ngram_probs.py','w') as f:
+with open(sys.argv[1] + '_ngram_probs.py','w') as f:
     f.write('prefix=')
     f.write(str(dict(start_ngrams)))
     f.write('\n')

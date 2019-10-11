@@ -6,7 +6,7 @@ __author__ = 'don.tuggener@gmail.com'
 
 import sys
 
-import ngram_probs  # trained with char_split_train.py
+import de_ngram_probs  # trained with char_split_train.py
 
 
 def split_compound(word: str):
