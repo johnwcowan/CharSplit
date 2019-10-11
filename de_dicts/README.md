@@ -1,3 +1,3 @@
 This directory is meant to contain modified forms of the
-LibreOffice dictionaries.
+LibreOffice and OpenOffice dictionaries.
 Type "sh ../getdicts" to download them.

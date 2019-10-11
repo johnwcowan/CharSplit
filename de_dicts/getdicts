@@ -1,6 +1,7 @@
 #/bin/sh
 # Copyright eBrevia.com 2019
 # This script downloads the LibreOffice German dictionaries
+# and the OpenOffice Dutch dictionary
 # and places them in the current directory.
 # It leaves a fair amount of trash in /tmp.
 
@@ -36,11 +37,18 @@ if [ ! -s dict-de_AT-frami_2017-01-12.oxt ]; then
     'https://extensions.libreoffice.org/extensions/german-de-at-frami-dictionaries/2017-01.12/@@download/file/dict-de_AT-frami_2017-01-12.oxt'
 fi
   
+if [ ! -s nl-dict-v2.00g.oxt ]; then
+  echo downloading LibreOffice extension for nl
+  wget $QUIET --no-check-certificate -O nl-dict-v2.00g.oxt \
+    'https://downloads.sourceforge.net/project/aoo-extensions/1456/6/nl-dict-v2.00g.oxt?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Faoo-extensions%2Ffiles%2F1456%2F6%2Fnl-dict-v2.00g.oxt%2Fdownload%3Fuse_mirror%3Dastuteinternet%26r%3Dhttps%253A%252F%252Fwww.google.com%252F%26use_mirror%3Dastuteinternet&ts=1570815217'
+fi
+  
 echo do internal processing
 unzip $QUIET -j -o dict-de_DE-1901_Oldspell_2017-06-22.oxt de_DE_OLDSPELL/de_DE_OLDSPELL.dic
 unzip $QUIET -j -o dict-de_DE-frami_2017-01-12.oxt de_DE_frami/de_DE_frami.dic
 unzip $QUIET -j -o dict-de_CH-frami_2017-01-12.oxt de_CH_frami/de_CH_frami.dic
 unzip $QUIET -j -o dict-de_AT-frami_2017-01-12.oxt de_AT_frami/de_AT_frami.dic
+unzip $QUIET -j -o nl-dict-v2.00g.oxt nl_NL.dic README_nl_NL.txt
 
 cp de_DE_OLDSPELL.dic de_DE_OLDSPELL.dic8
 iconv -f ISO-8859-1 -t UTF-8 <de_DE_frami.dic >de_DE_frami.dic8
@@ -52,6 +60,7 @@ egrep '^#|^$' de_DE_OLDSPELL.dic8 >>headers
 egrep '^#|^$' de_DE_frami.dic8 >>headers
 egrep '^#|^$' de_CH_frami.dic8 >>headers
 egrep '^#|^$' de_AT_frami.dic8 >>headers
+sed 's/^/#/' README_nl_NL.txt >>headers
 
 echo sort and merge
 egrep -v '^#|^$' de_DE_OLDSPELL.dic8 | sed 's;/.*$;;' |
@@ -62,5 +71,9 @@ egrep -v '^#|^$' de_CH_frami.dic8 | sed 's;/.*$;;' |
   sort >$HERE/de-CH.dic
 egrep -v '^#|^$' de_AT_frami.dic8 | sed 's;/.*$;;' |
   sort >$HERE/de-AT.dic
+cut -d/ -f1 nl_NL.dic |
+  sort >$HERE/nl-NL.dic
+
+echo make mixed de dictionary
 sort -u -o de-mixed.nohead $HERE/*.dic
 cat headers de-mixed.nohead >$HERE/de-mixed.dic
