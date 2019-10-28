@@ -8,6 +8,17 @@ import sys
 import doc_config
 import doc_split
 
+result_map = {}
+dict_mode = False
+
+def tabular(tab_map):
+    """Convert Python dict into sorted output lines "unsplit\tsplit\n"."""
+    result = []
+    for orig in sorted(tab_map.keys()):
+        split = tab_map[orig]
+        result.append(orig + '\t' + split)
+    return '\n'.join(result) + '\n'
+
 def run(client_socket, client_address, de_dict):
     """Reads, splits, writes."""
     input_bytes = bytearray(b'')
@@ -19,30 +30,38 @@ def run(client_socket, client_address, de_dict):
         if not block:
             break
         input_bytes += block
-    print("Read %d bytes" % (len(input_bytes)), file=sys.stderr)
+    #print("Read %d bytes" % (len(input_bytes)), file=sys.stderr)
     input_str = input_bytes.decode()
-    output_str = doc_split.doc_split(input_str, de_dict)
+    result_map.clear()
+    output_str = doc_split.doc_split(input_str, de_dict, result_map)
+    if dict_mode:
+        output_str = tabular(result_map)
     output_bytes = output_str.encode()
-    print("Split the text", file=sys.stderr)
+    #print("Split the text", file=sys.stderr)
     client_socket.sendall(output_bytes)
-    print("Written %d bytes" % (len(output_bytes)), file=sys.stderr)
+    #print("Written %d bytes" % (len(output_bytes)), file=sys.stderr)
     client_socket.shutdown(socket.SHUT_WR)
-    print("Client at ", client_address, " disconnecting", file=sys.stderr)
+    #print("Client at ", client_address, " disconnecting", file=sys.stderr)
 
 def main():
     """Main server program.
        Reads the whole of standard input, splits it all,
        sends the result to standard output.
-       Usage:  doc_server dict port
+       Usage: doc_server [-p][-d] port dict
     """
-    if len(sys.argv) > 2:
-        port = sys.argv[2]
-    else:
-        port = doc_config.DEFAULT_PORT
-    if len(sys.argv) > 1:
-        de_dict = sys.argv[1]
+    if len(sys.argv) > 3:
+        de_dict = sys.argv[3]
     else:
         de_dict = doc_config.DEFAULT_DICT
+
+    if len(sys.argv) > 2:
+        port = int(sys.argv[2])
+    else:
+        port = doc_config.DEFAULT_PORT
+
+    global dict_mode
+    if len(sys.argv) > 1:
+        dict_mode = (sys.argv[1] == '-d')
 
     doc_split.load_known_words(de_dict)
 

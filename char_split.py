@@ -1,20 +1,35 @@
+#!/usr/bin/python3
 """
-Split German compound words
+Split German, Dutch, etc. compound words
 """
 
 __author__ = 'don.tuggener@gmail.com'
 
 import sys
 
-import ngram_probs  # trained with char_split_train.py
+import de_ngram_probs  # trained with char_split_train.py
+import nl_ngram_probs  # trained with char_split_train.py
+# import other ngram_probs files too
 
 
-def split_compound(word: str):
+def split_compound(word: str, lang: str = 'de'):
     """
     Return list of possible splits, best first
     :param word: Word to be split
     :return: List of all splits
     """
+
+    if lang == 'de':
+        prefix = de_ngram_probs.prefix
+        infix = de_ngram_probs.infix
+        suffix = de_ngram_probs.suffix
+    elif lang == 'nl':
+        prefix = nl_ngram_probs.prefix
+        infix = nl_ngram_probs.infix
+        suffix = nl_ngram_probs.suffix
+    # elif other languages
+    else:
+        raise ValueError("No model for %s language" % (lang))
 
     word = word.lower()
 
@@ -30,16 +45,16 @@ def split_compound(word: str):
         pre_slice = cut_off_fugen_s(word[:n])
 
         # Start, in, and end probabilities
-        pre_slice_prob = ngram_probs.suffix.get(pre_slice, -1)
+        pre_slice_prob = suffix.get(pre_slice, -1)
         in_slice_prob = []
         ngram = cut_off_fugen_s(word[n:])
-        start_slice_prob = ngram_probs.prefix.get(ngram, -1)
+        start_slice_prob = prefix.get(ngram, -1)
 
         # Extract all ngrams
         for k in range(len(word), n+2, -1):
             # Probability of ngram in word, if high, split unlikely
             in_ngram = word[n:k]
-            in_slice_prob.append(ngram_probs.infix.get(in_ngram, 1))  # Favor ngrams not occurring within words
+            in_slice_prob.append(infix.get(in_ngram, 1))  # Favor ngrams not occurring within words
 
         in_slice_prob = min(in_slice_prob)  # Lowest, punish splitting of good ingrams
         score = start_slice_prob - in_slice_prob + pre_slice_prob
