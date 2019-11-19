@@ -63,17 +63,20 @@ def main():
     if len(sys.argv) > 1:
         dict_mode = (sys.argv[1] == '-d')
 
-    doc_split.load_known_words(de_dict)
-
-    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    server.bind(('localhost', port))
-    print("Server started", file=sys.stderr)
-    print("Waiting for client request..", file=sys.stderr)
-    while True:
-        server.listen(1)
-        client, client_address = server.accept()
-        run(client, client_address, de_dict)
+    try:
+        doc_split.load_known_words(de_dict)
+    
+        server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        server.bind(('localhost', port))
+        print("Server started", file=sys.stderr)
+        print("Waiting for client request..", file=sys.stderr)
+        while True:
+            server.listen(1)
+            client, client_address = server.accept()
+            run(client, client_address, de_dict)
+    except:
+        pass  # trap all errors so the server doesn't die
 
 if __name__ == "__main__":
     main()
