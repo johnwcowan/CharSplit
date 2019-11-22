@@ -63,9 +63,8 @@ def main():
     if len(sys.argv) > 1:
         dict_mode = (sys.argv[1] == '-d')
 
+    doc_split.load_known_words(de_dict)
     try:
-        doc_split.load_known_words(de_dict)
-    
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         server.bind(('localhost', port))
