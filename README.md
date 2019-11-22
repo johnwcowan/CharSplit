@@ -132,12 +132,12 @@ but should run somewhat faster.
 The default host and port are in the file `doc_config.py`.
 
 ## Downloading dictionaries
-To download German dictionaries for `doc_split` and `doc_server`:
+To download German and Dutch dictionaries for `doc_split` and `doc_server`:
 ```
 $ cd dicts
 $ sh getdicts
 ```
-This will download the German spelling plugins from the LibreOffice site,
+This will download the spelling plugins from the LibreOffice site,
 extract the wordlists, and write five files into the current directory.
 It leaves a good many files in `/tmp`, which are not needed further.
   * The dictionaries `de-DE.dic`, `de-AT.dic`, and `de-CH.dic` are
@@ -149,9 +149,12 @@ It leaves a good many files in `/tmp`, which are not needed further.
   * The file `legal.dic` contains legal terms.  Remove it before running
     getdicts if you don't want it to be included.
   * The file `de-mixed.dic` is a merger of all of the other files.
+  * The file `nl-NL.dic` is from OpenOffice and provides Dutch spelling
+    (not currently used).
 
 You can add your own wordlists before running `getdicts` if you want.
-They must be plain UTF-8 text with one word per line.
+They must be plain UTF-8 text with one word per line
+and begin with the correct language code (`de` for German).
 
 If the program is not splitting hard enough for your purposes,
 you may want to find and use a smaller dictionary.
