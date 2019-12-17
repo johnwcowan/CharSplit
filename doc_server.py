@@ -49,7 +49,7 @@ def run(client_socket, client_address, de_dict):
     #print("Split the text", file=sys.stderr)
     client_socket.sendall(output_bytes)
     #print("Written %d bytes" % (len(output_bytes)), file=sys.stderr)
-    logger.info("Written %d bytes", (len(output_bytes)))
+    logger.info("Written %d bytes", len(output_bytes))
     client_socket.shutdown(socket.SHUT_WR)
     #print("Client at ", client_address, " disconnecting", file=sys.stderr)
 
