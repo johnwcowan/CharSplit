@@ -107,13 +107,18 @@ Der Marquis schlug mit dem Hand·teller auf sein Regie·pult.
 Because of the startup time, you can run the document splitter
 as a simple server, and the responses will be quicker.
 ```
-$ python doc_server <dict> <port>
+$ python doc_server [ -d ] <dict> <port>
 ```
 The server will load `<dict>` and listen on `<port>`.
 The client must
 send the raw data in UTF-8 encoding to the port
 and close the write side of the port, and the
 server will return the split data.
+
+The option `-d` causes the server to return a sorted dictionary
+of split words instead.  Each word is on a single line,
+with the original word followed by a tab character followed by the split word.
+
 Because of Python restrictions, the server is single-threaded.
 
 The default dictionary and port are in the file `doc_config.py`.
