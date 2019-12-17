@@ -2,12 +2,17 @@
 # Copyright eBrevia.com 2019
 """Document-level splitting module."""
 
+import logging
 import re
 import sys
 
 import doc_config
 
 import char_split
+
+# pylint: disable=invalid-name
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 
 DE_LETTER = ('ABCDEFGHIJKLMNOPQRSTUVWXYZ' +
@@ -85,7 +90,8 @@ def load_known_words(de_dict=doc_config.DEFAULT_DICT):
         for word in file:
             if not (word == '' or word.startswith('#')):
                 KNOWN_WORDS.add(word.strip())
-    #print('%d known words loaded\n' % (len(KNOWN_WORDS)), file=sys.stderr)
+    # print('%d known words loaded\n' % (len(KNOWN_WORDS)), file=sys.stderr)
+    logger.info('%d known words loaded', len(KNOWN_WORDS))
 
 def maximal_split_str(word, de_dict=None):
     """Maximally split a word and return it with middle dots."""
