@@ -2,6 +2,7 @@
 # Copyright eBrevia.com 2019
 """Document splitting server."""
 
+import logging
 import socket
 import sys
 
@@ -10,6 +11,12 @@ import doc_split
 
 result_map = {}
 dict_mode = False
+
+logging.basicConfig(level=logging.INFO,
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
 
 def tabular(tab_map):
     """Convert Python dict into sorted output lines "unsplit\tsplit\n"."""
@@ -30,7 +37,8 @@ def run(client_socket, client_address, de_dict):
         if not block:
             break
         input_bytes += block
-    #print("Read %d bytes" % (len(input_bytes)), file=sys.stderr)
+    # print("Read %d bytes" % (len(input_bytes)), file=sys.stderr)
+    logger.info("Read %d bytes", len(input_bytes))
     input_str = input_bytes.decode()
     result_map.clear()
     output_str = doc_split.doc_split(input_str, de_dict, result_map)
@@ -40,6 +48,7 @@ def run(client_socket, client_address, de_dict):
     #print("Split the text", file=sys.stderr)
     client_socket.sendall(output_bytes)
     #print("Written %d bytes" % (len(output_bytes)), file=sys.stderr)
+    logger.info("Written %d bytes" % (len(output_bytes)))
     client_socket.shutdown(socket.SHUT_WR)
     #print("Client at ", client_address, " disconnecting", file=sys.stderr)
 
@@ -68,8 +77,10 @@ def main():
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         server.bind(('localhost', port))
-        print("Server started", file=sys.stderr)
-        print("Waiting for client request..", file=sys.stderr)
+        # print("Server started", file=sys.stderr)
+        # print("Waiting for client request..", file=sys.stderr)
+        logger.info("Server started")
+        logger.info("Waiting for client request...")
         while True:
             server.listen(1)
             client, client_address = server.accept()
