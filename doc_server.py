@@ -14,6 +14,7 @@ dict_mode = False
 
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+# pylint: disable=invalid-name
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
@@ -48,7 +49,7 @@ def run(client_socket, client_address, de_dict):
     #print("Split the text", file=sys.stderr)
     client_socket.sendall(output_bytes)
     #print("Written %d bytes" % (len(output_bytes)), file=sys.stderr)
-    logger.info("Written %d bytes" % (len(output_bytes)))
+    logger.info("Written %d bytes", (len(output_bytes)))
     client_socket.shutdown(socket.SHUT_WR)
     #print("Client at ", client_address, " disconnecting", file=sys.stderr)
 
