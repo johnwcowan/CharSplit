@@ -5,6 +5,7 @@
 import logging
 import socket
 import sys
+import resource
 
 import doc_config
 import doc_split
@@ -27,7 +28,7 @@ def tabular(tab_map):
         result.append(orig + '\t' + split)
     return '\n'.join(result) + '\n'
 
-def run(client_socket, client_address, de_dict):
+def run(client_socket, client_address, dict):
     """Reads, splits, writes."""
     input_bytes = bytearray(b'')
     blockno = 0
@@ -38,17 +39,15 @@ def run(client_socket, client_address, de_dict):
         if not block:
             break
         input_bytes += block
-    # print("Read %d bytes" % (len(input_bytes)), file=sys.stderr)
     logger.info("Read %d bytes", len(input_bytes))
     input_str = input_bytes.decode()
     result_map.clear()
-    output_str = doc_split.doc_split(input_str, de_dict, result_map)
+    output_str = doc_split.doc_split(input_str, dict, result_map)
     if dict_mode:
         output_str = tabular(result_map)
     output_bytes = output_str.encode()
-    #print("Split the text", file=sys.stderr)
+    logger.info("Split the text")
     client_socket.sendall(output_bytes)
-    #print("Written %d bytes" % (len(output_bytes)), file=sys.stderr)
     logger.info("Written %d bytes", len(output_bytes))
     client_socket.shutdown(socket.SHUT_WR)
     #print("Client at ", client_address, " disconnecting", file=sys.stderr)
@@ -60,9 +59,9 @@ def main():
        Usage: doc_server [-p][-d] port dict
     """
     if len(sys.argv) > 3:
-        de_dict = sys.argv[3]
+        dict = sys.argv[3]
     else:
-        de_dict = doc_config.DEFAULT_DICT
+        dict = doc_config.DEFAULT_DICT
 
     if len(sys.argv) > 2:
         port = int(sys.argv[2])
@@ -73,19 +72,20 @@ def main():
     if len(sys.argv) > 1:
         dict_mode = (sys.argv[1] == '-d')
 
-    doc_split.load_known_words(de_dict)
+    # Load dictionaries and report memory usage while quiescent
+    doc_split.load_known_words(dict)
+    mem_mb = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss // 1024
+    logger.info("Memory usage: %d MB", mem_mb)
+
     try:
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         server.bind(('localhost', port))
-        # print("Server started", file=sys.stderr)
-        # print("Waiting for client request..", file=sys.stderr)
         logger.info("Server started")
-        logger.info("Waiting for client request...")
         while True:
             server.listen(1)
             client, client_address = server.accept()
-            run(client, client_address, de_dict)
+            run(client, client_address, dict)
     except:
         pass  # trap all errors so the server doesn't die
 
