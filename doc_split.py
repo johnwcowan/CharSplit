@@ -48,12 +48,15 @@ def find_root(word):
 def get_best_split(word):
     """First look up the word, and if found, return it.
        Then get the best available split of a word into 2 words.
+       If score of best is less than 0, no split is available.
        If no split is available, the two words are the same; return one.
     """
     root = find_root(word)
     if root:
         return [root]
     candidate = char_split.split_compound(word)[0]
+    if candidate[0] <= 0:
+        return [word]
     if candidate[1] == candidate[2]:
         return [candidate[1]]
     return [candidate[1], candidate[2]]
