@@ -34,23 +34,23 @@ def run(client_socket, client_address, dict):
     blockno = 0
     while True:
         block = client_socket.recv(2048)
-        #print ("Read block %d" % blockno, file=sys.stderr)
+        #logger.info("Read block %d", blockno)
         blockno += 1
         if not block:
             break
         input_bytes += block
-    logger.info("Read %d bytes", len(input_bytes))
+    #logger.info("Read %d bytes", len(input_bytes))
     input_str = input_bytes.decode()
     result_map.clear()
     output_str = doc_split.doc_split(input_str, dict, result_map)
     if dict_mode:
         output_str = tabular(result_map)
     output_bytes = output_str.encode()
-    logger.info("Split the text")
+    #logger.info("Split the text")
     client_socket.sendall(output_bytes)
-    logger.info("Written %d bytes", len(output_bytes))
+    #logger.info("Written %d bytes", len(output_bytes))
     client_socket.shutdown(socket.SHUT_WR)
-    #print("Client at ", client_address, " disconnecting", file=sys.stderr)
+    #logger.info("Client at %s disconnecting", client_address)
 
 def main():
     """Main server program.
@@ -77,17 +77,20 @@ def main():
     mem_mb = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss // 1024
     logger.info("Memory usage: %d MB", mem_mb)
 
-    try:
-        server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        server.bind(('localhost', port))
-        logger.info("Server started")
-        while True:
-            server.listen(1)
-            client, client_address = server.accept()
-            run(client, client_address, dict)
-    except:
-        pass  # trap all errors so the server doesn't die
+    while True:
+        try:
+            server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            server.bind(('localhost', port))
+            logger.info("Server started")
+            while True:
+                server.listen(5)
+                client, client_address = server.accept()
+                run(client, client_address, dict)
+        except Exception:
+            # trap all errors so the server doesn't die
+            logger.exception("Error in doc_server main loop:");
+            server.close()
 
 if __name__ == "__main__":
     main()
