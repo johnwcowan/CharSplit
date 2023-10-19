@@ -1,6 +1,6 @@
-# CharSplit - An *ngram*-based compound splitter for German
+# CharSplit - An *ngram*-based compound splitter for German and Dutch
 
-Splits a German compound into its body and head, e.g.
+Splits a German or Dutch compound into its body and head, e.g.
 > Autobahnraststätte -> Autobahn - Raststätte
 
 Implementation of the method described in the appendix of the thesis:
@@ -10,9 +10,9 @@ Tuggener, Don (2016). *Incremental Coreference Resolution for German.* Universit
 ### TL;DR
 The method calculates probabilities of ngrams occurring at the beginning, end and in the middle of words and identifies the most likely position for a split.
 
-The method achieves ~95% accuracy for head detection on the [Germanet compound test set](http://www.sfs.uni-tuebingen.de/lsd/compounds.shtml).
+The method achieves ~95% accuracy for head detection on the [et compound test set](http://www.sfs.uni-tuebingen.de/lsd/compounds.shtml).
 
-A model is provided, trained on 1 Mio. German nouns from Wikipedia.
+A model is provided, trained on 1 Mio.  nouns from Wikipedia.
 
 ### Usage 
 ### Train a new model:
@@ -68,7 +68,7 @@ and writes out the same, with the best splits
 separated by the middle dot character `·`.
 
 Each word is split as many times as possible based
-on the file <dict>, which contains German words
+on the file <dict>, which contains German or Dutch words
 one per line (comment lines beginning with # are allowed).
 
 The name of the default dictionary is in the file `doc_config.py`.
